@@ -1,6 +1,14 @@
+import 'package:badges/badges.dart';
+import 'package:cart_project/controller/cart_controller.dart';
+import 'package:cart_project/controller/data_controller.dart';
+import 'package:cart_project/model/item_selection_model.dart';
+import 'package:cart_project/model/selectedproduct_model.dart';
+import 'package:cart_project/view/cart_page.dart';
+import 'package:cart_project/view/product_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -34,30 +43,77 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  DataController dataController = Get.put(DataController());
+  CartController cartController = Get.put(CartController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-       body:StreamBuilder(
-         stream: FirebaseFirestore.instance.collection('data').snapshots(),
-         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-           if (!snapshot.hasData) {
-             return Center(
-               child: CircularProgressIndicator(),
-             );
-           }
-
-           return ListView(
-             children: snapshot.data!.docs.map((document) {
-               return Container(
-                 child: Center(child: Text(document['title'])),
-               );
-             }).toList(),
+        appBar: AppBar(
+          title: Text("Cre"),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.grey,
+          elevation: 0,
+          actions: [
+            Obx(()=>cartController.cartItemList.isNotEmpty ? GestureDetector(onTap: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CartPage()));
+            },child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+              child: Badge(
+                  badgeColor: Colors.green,
+                  badgeContent: Text(cartController.cartItemList.length.toString(),),
+                  child: const Icon(Icons.shopping_cart,color: Colors.black,)),
+            )):const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Icon(Icons.shopping_cart,color: Colors.black,),
+            )),
+          ],
+        ),
+       body:Obx(()=>ListView.builder(
+         itemCount: dataController.localDataList.length,
+         itemBuilder:(context,index){
+           return GestureDetector(
+             onTap: (){
+               Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductDescription(
+                 title: dataController.localDataList[index].title,
+                 id: dataController.localDataList[index].documentId,
+                 imageUrl: dataController.localDataList[index].image,
+                 price: dataController.localDataList[index].price,
+               )));
+             },
+             child: Column(
+               children: [
+                 Padding(
+                   padding: const EdgeInsets.symmetric(vertical: 10),
+                   child: Container(
+                     height: 150,
+                     width: 150,
+                     decoration: BoxDecoration(
+                       color: Colors.white,
+                       borderRadius: BorderRadius.circular(10),
+                       boxShadow: [
+                         BoxShadow(
+                             color: Colors.grey.shade300,
+                             blurRadius: 2,
+                             spreadRadius: 1,
+                             offset: Offset(1,1)
+                         )
+                       ],
+                       image: DecorationImage(
+                           fit: BoxFit.fill,
+                           image: NetworkImage(dataController.localDataList[index].image)
+                       ),
+                     ),
+                   ),
+                 ),
+                 Text(dataController.localDataList[index].title),
+                 Text("Rs. "+ dataController.localDataList[index].price),
+               ],
+             ),
            );
-         },
-       ),
+         }
+       ))
     );
   }
 }
