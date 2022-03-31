@@ -18,7 +18,7 @@ class DataController extends GetxController{
   void onReady() {
     dataList.bindStream(DataService.fetchDataStream());
     cartList.bindStream(DataService.fetchCartStream());
-    cartController.cartItemList.addAll(cartList.value);
+    cartController.cartItemList.addAll(localCartList);
     cartController.cartItemList.refresh();
   }
 }

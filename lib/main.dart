@@ -55,8 +55,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // cartController.cartItemList.addAll(dataController.cartList.value);
     // cartController.cartItemList.refresh();
     // print(cartController.cartItemList[0].title);
-
-
   }
 
 
