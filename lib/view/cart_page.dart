@@ -1,6 +1,6 @@
 import 'package:cart_project/controller/cart_controller.dart';
-import 'package:cart_project/model/item_selection_model.dart';
-import 'package:cart_project/model/selectedproduct_model.dart';
+import 'package:cart_project/service/data_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,8 +33,7 @@ class _CartPageState extends State<CartPage> {
                           shrinkWrap: true,
                           itemCount: cartController.cartItemList.length,
                           itemBuilder: (context, index) {
-                            double prize = double.parse(cartController.cartItemList[index].individualPrice) * double.parse(cartController.cartItemList[index].qty.toString());
-                            cartController.cartItemList[index].price = prize.toString();
+
                             return Column(
                               children: [
                                 ListTile(
@@ -55,6 +54,11 @@ class _CartPageState extends State<CartPage> {
                                               onTap:(){
                                                 cartController.decreaseQty(cartController.cartItemList[index].id);
                                                 cartController.cartItemList.refresh();
+                                                double prize = double.parse(cartController.cartItemList[index].individualPrice) * double.parse(cartController.cartItemList[index].qty.toString());
+                                                cartController.cartItemList[index].price = prize.toString();
+                                                cartController.cartItemList.refresh();
+
+                                                DataService.updateCart(cartController.cartItemList[index].id, cartController.cartItemList[index].qty,cartController.cartItemList[index].price);
                                               },
                                               child: Container(
                                                 height: 30,width: 30,
@@ -73,6 +77,11 @@ class _CartPageState extends State<CartPage> {
                                               onTap:(){
                                                 cartController.incrementQty(cartController.cartItemList[index].id);
                                                 cartController.cartItemList.refresh();
+                                                double prize = double.parse(cartController.cartItemList[index].individualPrice) * double.parse(cartController.cartItemList[index].qty.toString());
+                                                cartController.cartItemList[index].price = prize.toString();
+                                                cartController.cartItemList.refresh();
+
+                                                DataService.updateCart(cartController.cartItemList[index].id, cartController.cartItemList[index].qty,cartController.cartItemList[index].price);
                                               },
                                               child: Container(
                                                 height: 30,width: 30,
@@ -86,7 +95,9 @@ class _CartPageState extends State<CartPage> {
                                             IconButton(
                                               icon: Icon(Icons.restore_from_trash),
                                               onPressed: (){
+                                                DataService.deleteCart(cartController.cartItemList[index].id);
                                                 cartController.cartItemList.removeAt(index);
+                                                cartController.cartItemList.refresh();
                                               },
                                             ),
                                           ],

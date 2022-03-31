@@ -13,11 +13,13 @@ import 'package:get/get.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+   MyApp({Key? key}) : super(key: key);
+   DataController dataController = Get.put(DataController());
+   CartController cartController = Get.put(CartController());
 
   // This widget is the root of your application.
   @override
@@ -43,8 +45,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  DataController dataController = Get.put(DataController());
-  CartController cartController = Get.put(CartController());
+  DataController dataController = Get.find<DataController>();
+  CartController cartController = Get.find<CartController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // cartController.cartItemList.addAll(dataController.cartList.value);
+    // cartController.cartItemList.refresh();
+    // print(cartController.cartItemList[0].title);
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {

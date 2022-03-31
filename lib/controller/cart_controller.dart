@@ -1,5 +1,6 @@
 import 'package:cart_project/model/cart_model.dart';
 import 'package:cart_project/model/item_selection_model.dart';
+import 'package:cart_project/service/data_service.dart';
 import 'package:get/get.dart';
 
 class CartController extends GetxController{
@@ -23,6 +24,7 @@ class CartController extends GetxController{
       qty.refresh();
     }else{
       cartItemList.add(cartItem);
+      DataService.cartFirebase(PreCartModel(id: cartItem.id,title: cartItem.title,imageUrl: cartItem.imageUrl,price: cartItem.price,individualPrice: double.parse(cartItem.price)),cartItem.qty);
       cartItemList.refresh();
       qty.value = 1;
       qty.refresh();
@@ -35,12 +37,16 @@ class CartController extends GetxController{
   void incrementQty(id) {
     var index = cartItemList.indexWhere((listItems) => listItems.id == id);
     cartItemList[index].qty += 1;
+    cartItemList.refresh();
+    // DataService.updateCart(id, cartItemList[index].qty,cartItemList[index].price);
   }
 
   void decreaseQty(id) {
     var index = cartItemList.indexWhere((listItems) => listItems.id == id);
     if(cartItemList[index].qty > 1){
       cartItemList[index].qty -= 1;
+      cartItemList.refresh();
+      // DataService.updateCart(id, cartItemList[index].qty,cartItemList[index].price);
     }
   }
 
