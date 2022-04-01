@@ -136,7 +136,7 @@ class _CartPageState extends State<CartPage> {
                                     children: [
                                       const Padding(
                                         padding: EdgeInsets.symmetric(horizontal: 20.0),
-                                        child: Text('Cena produktu',
+                                        child: Text('Sub Total',
                                         ),
                                       ),
                                       Obx(()=> Padding(
@@ -145,15 +145,6 @@ class _CartPageState extends State<CartPage> {
                                           // style: MyTheme.hintText,
                                         ),
                                       )),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: const [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 20.0),
-                                        child: Text('Wysyłka'),
-                                      ),
                                     ],
                                   ),
                                 ],
@@ -172,25 +163,6 @@ class _CartPageState extends State<CartPage> {
                             )
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                child: Text('Razem'),
-                              ),
-                              // Obx(()=>
-                              //     Padding(
-                              //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                              //   child: Text("${cartController.totalPrice+int.parse(userDataController.userDataList.value.response!.detail!.deliveryFees)} zł",
-                              //     // style: MyTheme.black18w700,
-                              //   ),
-                              // )),
-                            ],
-                          ),
-                        ),
                         Row(
                           children: [
                             Expanded(
@@ -204,14 +176,16 @@ class _CartPageState extends State<CartPage> {
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                     ),
                                     onPressed: () async {
-                                      print("asdasdas");
-
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Purchase Complete")));
+                                      DataService.cartDelete().whenComplete(() =>
+                                          cartController.cartItemList.clear()
+                                      );
                                     },
                                     child:
                                     Row(
                                       children: const [
                                         Spacer(),
-                                        Text("Dalej"),
+                                        Text("Proceed To Pay"),
                                         Spacer(),
                                       ],
                                     )

@@ -66,12 +66,25 @@ class DataService{
     );
   }
 
-  /// Update Cart to Firebase ///
-  static deleteCart(id) {
+  /// delete Cart to Firebase ///
+  static deleteCart(id)  {
     firebaseFirestore
         .collection('cart')
         .doc(id)
         .delete();
+  }
+
+  /// delete Cart to Firebase ///
+
+  static Future cartDelete() async {
+    final instance = FirebaseFirestore.instance;
+    final batch = instance.batch();
+    var collection = instance.collection('cart');
+    var snapshots = await collection.get();
+    for (var doc in snapshots.docs) {
+      batch.delete(doc.reference);
+    }
+    await batch.commit();
   }
 
 }

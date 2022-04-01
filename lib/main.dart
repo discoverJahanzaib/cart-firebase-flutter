@@ -1,11 +1,8 @@
 import 'package:badges/badges.dart';
 import 'package:cart_project/controller/cart_controller.dart';
 import 'package:cart_project/controller/data_controller.dart';
-import 'package:cart_project/model/item_selection_model.dart';
-import 'package:cart_project/model/selectedproduct_model.dart';
 import 'package:cart_project/view/cart_page.dart';
 import 'package:cart_project/view/product_detail.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Cre'),
     );
   }
 }
@@ -48,21 +45,16 @@ class _MyHomePageState extends State<MyHomePage> {
   DataController dataController = Get.find<DataController>();
   CartController cartController = Get.find<CartController>();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // cartController.cartItemList.addAll(dataController.cartList.value);
-    // cartController.cartItemList.refresh();
-    // print(cartController.cartItemList[0].title);
-  }
-
 
   @override
   Widget build(BuildContext context) {
+    for(var e in dataController.localCartList){
+      cartController.cartItemList.add(e);
+      cartController.cartItemList.refresh();
+    }
     return Scaffold(
         appBar: AppBar(
-          title: Text("Cre"),
+          title: Text(widget.title),
           centerTitle: true,
           automaticallyImplyLeading: false,
           backgroundColor: Colors.grey,
@@ -84,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
        body:Obx(()=>ListView.builder(
          itemCount: dataController.localDataList.length,
+         shrinkWrap: true,
          itemBuilder:(context,index){
            return GestureDetector(
              onTap: (){

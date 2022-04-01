@@ -4,11 +4,12 @@ import 'package:cart_project/service/data_service.dart';
 import 'package:get/get.dart';
 
 class CartController extends GetxController{
-  var cartItemList = List<CartProductModel>.empty(growable: true).obs ;
+  var cartItemList = <CartProductModel>[].obs ;
   var qty = 1.obs;
   var subtotal = 0.obs;
 
-  addtoCart(PreCartModel selectedProductitem,{int quantity = 1}){
+  /// adding item to cart after Checking
+  addtoCart(PreCartModel selectedProductitem){
     var cartItem = CartProductModel(
       id: selectedProductitem.id.toString(),
       title: selectedProductitem.title,
@@ -30,15 +31,11 @@ class CartController extends GetxController{
       qty.refresh();
     }
   }
-  // bool isExist(item) {
-  //   return cartItemList.contains(item);
-  // }
 
   void incrementQty(id) {
     var index = cartItemList.indexWhere((listItems) => listItems.id == id);
     cartItemList[index].qty += 1;
     cartItemList.refresh();
-    // DataService.updateCart(id, cartItemList[index].qty,cartItemList[index].price);
   }
 
   void decreaseQty(id) {
@@ -46,7 +43,6 @@ class CartController extends GetxController{
     if(cartItemList[index].qty > 1){
       cartItemList[index].qty -= 1;
       cartItemList.refresh();
-      // DataService.updateCart(id, cartItemList[index].qty,cartItemList[index].price);
     }
   }
 
